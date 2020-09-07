@@ -1,0 +1,67 @@
+<p>sim-connecter works!</p>
+
+<button pButton label="Init Plugin" (click)="requestInitPlugin()"></button>
+
+<!-- <pre>
+    {{simData | json}}
+</pre> -->
+
+<table class="table table-sm table-striped" *ngIf="simData">
+    <thead>
+        <tr>
+            <th>Property</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Latitude</td>
+            <td>{{simData.Latitude | number}} degrees</td>
+        </tr>
+        <tr>
+            <td>Longitude</td>
+            <td>{{simData.Longitude | number}} degrees</td>
+        </tr>
+        <tr>
+            <td>Altitude</td>
+            <td>{{simData.Altitude | number : '1.0-0'}} feet</td>
+        </tr>
+        <tr>
+            <td>Airline</td>
+            <td>{{simData.Airline}}</td>
+        </tr>
+        <tr>
+            <td>Flight Number</td>
+            <td>{{simData.FlightNumber}}</td>
+        </tr>
+        <tr>
+            <td>Tail Number</td>
+            <td>{{simData.TailNumber}}</td>
+        </tr>
+        <tr>
+            <td>Heading</td>
+            <td>{{simData.TrueHeading | number}}</td>
+        </tr>
+        <tr>
+            <td>Fuel</td>
+            <td>{{simData.FuelQty | number}} gallons</td>
+        </tr>
+
+        <tr>
+            <td>Status</td>
+            <td>
+                {{(simData.OnGround) ? 'Grounded' : 'Flying'}}
+            </td>
+        </tr>
+
+        <tr>
+            <td>Parking Brake</td>
+            <td>
+                {{(simData.ParkingBrake ? 'Set' : 'Released')}}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<p-gmap *ngIf="options" [options]="options" [overlays]="overlays" [style]="{'width':'100%','height':'600px'}"
+    (onMapReady)="setMap($event)"></p-gmap>
