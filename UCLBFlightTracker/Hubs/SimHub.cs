@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 
-namespace UCLBFlightTracker.Hubs
+namespace FlightManager.Hubs
 {
     public class SimHub : Hub
     {

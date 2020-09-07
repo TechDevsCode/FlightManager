@@ -1,15 +1,15 @@
 ﻿using BeatlesBlog.SimConnect;
 using System;
-using UCLBFlightTracker.Hubs;
+using FlightManager.Hubs;
 
-namespace UCLBFlightTracker
+namespace FlightManager
 {
-    public class UCLBClient : SimConnectClient
+    public class FlightSimConnector : SimConnectClient
     {
         public Position currentPosition;
         private readonly SimHub simHub;
 
-        public UCLBClient(SimHub simHub) : base("UCLB Client")
+        public FlightSimConnector(SimHub simHub) : base("FlightManagerClient")
         {
             Client.OnRecvException += OnRecvException;
             Client.OnRecvEvent += OnRecvEvent;

@@ -5,6 +5,9 @@ import { AppComponent } from './app.component';
 import { SimConnecterComponent } from './sim-connecter/sim-connecter.component';
 import { ButtonModule } from "primeng/button";
 import { GMapModule } from 'primeng/gmap';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { SliderModule } from 'primeng/slider';
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -15,7 +18,10 @@ import { GMapModule } from 'primeng/gmap';
     BrowserModule,
     HttpClientModule,
     ButtonModule,
-    GMapModule
+    GMapModule,
+    InputNumberModule,
+    FormsModule,
+    SliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]

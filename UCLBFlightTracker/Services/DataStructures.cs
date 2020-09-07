@@ -1,6 +1,6 @@
 ﻿using BeatlesBlog.SimConnect;
 
-namespace UCLBFlightTracker
+namespace FlightManager
 {
 
 	//			"STALL WARNING",

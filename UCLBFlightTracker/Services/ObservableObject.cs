@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace UCLBFlightTracker
+namespace FlightManager
 {
     // https://rachel53461.wordpress.com/2011/05/08/simplemvvmexample/
     // https://stackoverflow.com/a/1316417

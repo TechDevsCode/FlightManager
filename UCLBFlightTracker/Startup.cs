@@ -5,10 +5,15 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using UCLBFlightTracker.Hubs;
+using FlightManager.Hubs;
 
-namespace UCLBFlightTracker
+namespace FlightManager
 {
+    public class FlightManagerConfig
+    {
+        public bool UseDummySimData { get; set; }
+    }
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -21,6 +26,10 @@ namespace UCLBFlightTracker
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<FlightManagerConfig>(Configuration.GetSection("FlightManagerConfig"));
+            services.AddSingleton(Configuration);
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder
@@ -32,7 +41,7 @@ namespace UCLBFlightTracker
 
             services.AddControllersWithViews();
             services.AddSignalR();
-            services.AddSingleton<UCLBClient>();
+            services.AddSingleton<FlightSimConnector>();
             services.AddSingleton<SimHub>();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

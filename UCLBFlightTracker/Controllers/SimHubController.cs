@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace UCLBFlightTracker.Controllers
+namespace FlightManager.Controllers
 {
     public class SimHubController : ControllerBase
     {
-        private readonly UCLBClient client;
+        private readonly FlightSimConnector client;
 
-        public SimHubController(UCLBClient client)
+        public SimHubController(FlightSimConnector client)
         {
             this.client = client;
         }

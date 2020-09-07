@@ -1,6 +1,6 @@
 using System;
 
-namespace UCLBFlightTracker
+namespace FlightManager
 {
     public class WeatherForecast
     {

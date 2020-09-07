@@ -5,7 +5,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace UCLBFlightTracker
+namespace FlightManager
 { 
     public abstract class SimConnectClient : ObservableObject
     {

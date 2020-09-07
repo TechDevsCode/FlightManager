@@ -1197,6 +1197,11 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/googlemaps@^3.39.13":
+  version "3.39.13"
+  resolved "https://registry.yarnpkg.com/@types/googlemaps/-/googlemaps-3.39.13.tgz#a2649ac618cb15bd04ad8700c41693c8c1f90e21"
+  integrity sha512-R/k5WKe8zQHo9oFRINuX/1haKYRkKEfItnBGrSjspbXXITakRdsj6daQIdL1+Pt84lnzduWurxNA5k0fgPMQUg==
+
 "@types/jasmine@*", "@types/jasmine@~3.5.0":
   version "3.5.14"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-3.5.14.tgz#f41a14e8ffa939062a71cf9722e5ee7d4e1f94af"

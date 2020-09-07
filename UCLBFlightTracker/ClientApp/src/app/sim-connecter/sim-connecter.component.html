@@ -1,6 +1,6 @@
-<p>sim-connecter works!</p>
-
 <button pButton label="Init Plugin" (click)="requestInitPlugin()"></button>
+<button pButton label="Debug Map" (click)="debugMap()"></button>
+<button pButton label="Set Marker" (click)="setMarker()"></button>
 
 <!-- <pre>
     {{simData | json}}
@@ -16,15 +16,34 @@
     <tbody>
         <tr>
             <td>Latitude</td>
-            <td>{{simData.Latitude | number}} degrees</td>
+            <td>
+                <p-inputNumber [(ngModel)]="simData.Latitude" (ngModelChange)="setMarker()"
+                    [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal"
+                    decrementButtonClass="p-button-danger" incrementButtonClass="p-button-success"
+                    incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" [step]="0.01" suffix=" degrees">
+                </p-inputNumber>
+            </td>
         </tr>
         <tr>
             <td>Longitude</td>
-            <td>{{simData.Longitude | number}} degrees</td>
+            <td>
+                <p-inputNumber [(ngModel)]="simData.Longitude" (ngModelChange)="setMarker()"
+                    [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal"
+                    decrementButtonClass="p-button-danger" incrementButtonClass="p-button-success"
+                    incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" [step]="0.01" suffix=" degrees">
+                </p-inputNumber>
+            </td>
         </tr>
         <tr>
             <td>Altitude</td>
             <td>{{simData.Altitude | number : '1.0-0'}} feet</td>
+        </tr>
+        <tr>
+            <td>Heading</td>
+            <td>
+                <p-slider [(ngModel)]="simData.TrueHeading" (ngModelChange)="setMarker()" [min]="0" [max]="359"></p-slider>
+                <!-- {{simData.TrueHeading | number}} -->
+            </td>
         </tr>
         <tr>
             <td>Airline</td>
@@ -37,10 +56,6 @@
         <tr>
             <td>Tail Number</td>
             <td>{{simData.TailNumber}}</td>
-        </tr>
-        <tr>
-            <td>Heading</td>
-            <td>{{simData.TrueHeading | number}}</td>
         </tr>
         <tr>
             <td>Fuel</td>
@@ -63,5 +78,5 @@
     </tbody>
 </table>
 
-<p-gmap *ngIf="options" [options]="options" [overlays]="overlays" [style]="{'width':'100%','height':'600px'}"
+<p-gmap [options]="options" [overlays]="overlays" [style]="{'width':'100%','height':'600px'}"
     (onMapReady)="setMap($event)"></p-gmap>
