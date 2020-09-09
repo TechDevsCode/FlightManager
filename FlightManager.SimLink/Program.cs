@@ -37,12 +37,13 @@ namespace FlightManager.SimLink
                 {
                     Items =
                     {
+                        new ToolStripLabel () { Text = "https://localhost:5001" },
                         new ToolStripMenuItem("Send test flight data", null, OnTestClick),
                         new ToolStripSeparator(),
                         new ToolStripMenuItem("Exit", null, OnExitClick),
                     }
                 },
-                Icon = new System.Drawing.Icon("simlink.ico", 256, 256),
+                Icon = new System.Drawing.Icon("Data/simlink.ico", 256, 256),
                 Visible = true
             };
             InitWebHost();
@@ -54,6 +55,7 @@ namespace FlightManager.SimLink
         {
             _webHost = Host.CreateDefaultBuilder()
                 .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>())
+                .UseEnvironment("Development")
                 .Build();
             await _webHost.RunAsync();
         }
@@ -83,17 +85,17 @@ namespace FlightManager.SimLink
 
         private async void OnTestClick(object sender, EventArgs e)
         {
-            await hub.SendPositionObject(new Position
+            await hub.SendPositionObject(new SimUpdate
             {
-                Latitude = 52.2511651,
-                Longitude = -5.251215,
-                Altitude = 1952,
-                TrueHeading = 247,
-                FuelQty = 24.6,
-                Airline = "TechDevs Air",
-                FlightNumber = "TDV001",
-                OnGround = false,
-                GroundSpeed = 142
+                latitude = 52.2511651,
+                longitude = -5.251215,
+                altitude = 1952,
+                trueHeading = 247,
+                fuelQty = 24.6,
+                airline = "TechDevs Air",
+                flightNumber = "TDV001",
+                onGround = false,
+                groundSpeed = 142
             });
         }
     }

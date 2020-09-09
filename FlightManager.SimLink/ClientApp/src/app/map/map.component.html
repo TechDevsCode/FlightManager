@@ -1,0 +1,9 @@
+<span class="p-buttonset">
+    <button pButton label="Center Map" (click)="centreMap()"></button>
+    <p-toggleButton [(ngModel)]="follow" onLabel="Following" offLabel="Free"></p-toggleButton>
+    <p-toggleButton [(ngModel)]="trackHeading" onLabel="Tracking" offLabel="Not Tracking Heading"></p-toggleButton>
+</span>
+
+
+<!-- <p-gmap [style]="{'width':'100%','height':'600px'}" [options]="options" (onMapReady)="initMap($event)"></p-gmap> -->
+<div id="fm-map" [style]="{'width':'100%','height':'600px'}"></div>

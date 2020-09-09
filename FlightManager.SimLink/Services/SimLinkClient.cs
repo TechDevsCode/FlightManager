@@ -6,7 +6,7 @@ namespace FlightManager
 {
     public class SimLinkClient : SimConnectClient
     {
-        public Position currentPosition;
+        public SimUpdate currentPosition;
         private readonly SimLinkHub simHub;
 
         public SimLinkClient(SimLinkHub simHub) : base("FlightManagerClient")
@@ -42,7 +42,7 @@ namespace FlightManager
             //ffUdp = ForeFlightUdp.Instance;
             //ffUdp.SetSimulator(simIdent);
 
-            Client.RequestDataOnUserSimObject(Requests.UserPosition, SIMCONNECT_PERIOD.SECOND, SIMCONNECT_DATA_REQUEST_FLAG.DEFAULT, typeof(Position));
+            Client.RequestDataOnUserSimObject(Requests.UserPosition, SIMCONNECT_PERIOD.SECOND, SIMCONNECT_DATA_REQUEST_FLAG.DEFAULT, typeof(SimUpdate));
             Client.RequestDataOnSimObjectType(Requests.TrafficEnumerate, 200000, SIMCONNECT_SIMOBJECT_TYPE.AIRCRAFT & SIMCONNECT_SIMOBJECT_TYPE.HELICOPTER, typeof(TrafficInfo));
             Client.SubscribeToSystemEvent(Events.ObjectAdded, "ObjectAdded");
             Client.SubscribeToSystemEvent(Events.SixHz, "6Hz");
@@ -57,7 +57,7 @@ namespace FlightManager
         {
             try
             {
-                var position = (Position)data.dwData;
+                var position = (SimUpdate)data.dwData;
                 currentPosition = position;
                 await simHub.SendPositionObject(position);
             }

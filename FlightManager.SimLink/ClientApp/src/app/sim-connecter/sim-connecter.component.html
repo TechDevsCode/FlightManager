@@ -1,0 +1,172 @@
+<div *ngIf="!job" class="page-body">
+    <h1>No Active Job!</h1>
+    <button pButton label="Goto Jobs" [routerLink]="['/manage_jobs']"></button>
+    <button pButton label="Load Job" (click)="loadJob()"></button>
+</div>
+
+<div class="page-body" *ngIf="job">
+    <div class="row">
+        <div class="col">
+            <table class="table table-sm table-striped" *ngIf="job">
+                <thead>
+                    <tr>
+                        <th colspan="3">Job Details</th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Value</th>
+                        <th>Commands</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Job #</td>
+                        <td>
+                            {{job.jobNumber}}
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Job Name</td>
+                        <td>{{job.name}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Departure</td>
+                        <td>{{job.departure.icao}} - {{job.departure.name}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Destination</td>
+                        <td>{{job.arrival.icao}} - {{job.arrival.name}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Pilot</td>
+                        <td>{{job.pilot}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Flight #</td>
+                        <td>{{job.flightNumber}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Tail #</td>
+                        <td>{{job.tailNumber}}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Job Status</td>
+                        <td>{{job.status}}</td>
+                        <td>
+                            <span class="p-buttonset">
+                                <button pButton label="Start Job" (click)="jobService.startJob()"
+                                    class="p-button-sm"></button>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Flight Status</td>
+                        <td>{{job.flightStatus}}</td>
+                        <td></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <table class="table table-sm table-striped" *ngIf="simData">
+                <thead>
+                    <tr>
+                        <th colspan="2">Flight Details</th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Latitude</td>
+                        <td>
+                            {{simData.latitude | number}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Longitude</td>
+                        <td>
+                            {{simData.longitude | number}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Altitude</td>
+                        <td>{{simData.altitude | number : '1.0-0'}} feet</td>
+                    </tr>
+                    <tr>
+                        <td>Heading</td>
+                        <td>
+                            {{simData.trueHeading | number}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Airline</td>
+                        <td>{{simData.airline}}</td>
+                    </tr>
+                    <tr>
+                        <td>Flight Number</td>
+                        <td>{{simData.flightNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>Tail Number</td>
+                        <td>{{simData.tailNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>Fuel</td>
+                        <td>{{simData.fuelQty | number}} gallons</td>
+                    </tr>
+
+                    <tr>
+                        <td>Status</td>
+                        <td>
+                            {{(simData.onGround) ? 'Grounded' : 'Flying'}}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Parking Brake</td>
+                        <td>
+                            {{(simData.parkingBrake ? 'Set' : 'Released')}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>At Departure Airport</td>
+                        <td>
+                            {{simData.atDepartureAirport}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>At Destination Airport</td>
+                        <td>
+                            {{simData.atArrivalAirport}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Distance to Destination</td>
+                        <td>
+                            {{simData.distanceToDestination | number}} km
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<app-map *ngIf="job" [position]="simData?.position" [heading]="simData?.trueHeading"
+    [departure]="job.departure.position" [arrival]="job.arrival.position"></app-map>
