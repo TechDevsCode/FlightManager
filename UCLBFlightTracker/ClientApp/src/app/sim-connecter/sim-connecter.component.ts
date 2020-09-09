@@ -3,6 +3,8 @@ import * as signalR from "@aspnet/signalr";
 import { HttpClient } from '@angular/common/http';
 declare var google: any;
 import { } from 'googlemaps';
+import { JobService } from '../job.service';
+import { FlightUpdate } from '../manage-jobs/manage-jobs.component';
 
 export interface SimUpdate {
   Latitude: number;
@@ -21,6 +23,9 @@ export interface SimUpdate {
   OverspeedWarning: boolean;
   FuelQty: number;
   GPSApproachTimeDeviation: boolean;
+  AtDepartureAirport: boolean;
+  AtArrivalAirport: boolean;
+  DistanceToDestination: number;
 }
 
 @Component({
@@ -33,6 +38,8 @@ export class SimConnecterComponent implements OnInit {
   connection: signalR.HubConnection;
   simData: SimUpdate;
 
+  follow: boolean = false;
+
   options: any;
   overlays: any[];
   lat = 0;
@@ -41,29 +48,40 @@ export class SimConnecterComponent implements OnInit {
   map: google.maps.Map;
   marker: google.maps.Marker;
 
+  numDeltas = 100;
+  delay = 10; //milliseconds
+  i = 0;
+  deltaLat;
+  deltaLng;
+  position = [40.748774, -73.985763];
+
+  private lastUpdate: number = new Date().getTime();
+  private frequency: number = 1000;
+
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    public jobService: JobService
   ) { }
 
   ngOnInit(): void {
-    this.requestInitPlugin();
-    this.options = {
-      center: { lat: 36.890257, lng: 30.707417 },
-      zoom: 12
+    // this.requestInitPlugin();
+    if (this.jobService.lastFlightUpdate) {
+      this.options = {
+        center: { lat: this.jobService.lastFlightUpdate.lat, lng: this.jobService.lastFlightUpdate.lng },
+        zoom: 10,
+        mapTypeId: 'terrain'
+      };
+    } else {
+      this.options = {
+        center: { lat: 0, lng: 0 },
+        zoom: 10,
+        mapTypeId: 'terrain'
+      };
     };
 
-    this.overlays = [
-      new google.maps.Marker({ position: { lat: 36.879466, lng: 30.667648 }, title: "Konyaalti" }),
-      new google.maps.Marker({ position: { lat: 36.883707, lng: 30.689216 }, title: "Ataturk Park" }),
-      new google.maps.Marker({ position: { lat: 36.885233, lng: 30.702323 }, title: "Oldtown" }),
-      new google.maps.Polygon({
-        paths: [
-          { lat: 36.9177, lng: 30.7854 }, { lat: 36.8851, lng: 30.7802 }, { lat: 36.8829, lng: 30.8111 }, { lat: 36.9177, lng: 30.8159 }
-        ], strokeOpacity: 0.5, strokeWeight: 1, fillColor: '#1976D2', fillOpacity: 0.35
-      }),
-      new google.maps.Circle({ center: { lat: 36.90707, lng: 30.56533 }, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }),
-      new google.maps.Polyline({ path: [{ lat: 36.86149, lng: 30.63743 }, { lat: 36.86341, lng: 30.72463 }], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 })
-    ];
+    this.simData = <SimUpdate>{};
+    this.simData.Latitude = this.jobService.activeJob.departure.latitude;
+    this.simData.Longitude = this.jobService.activeJob.departure.longitude;
 
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl("/simhub")
@@ -74,123 +92,153 @@ export class SimConnecterComponent implements OnInit {
       .then(() => {
         console.log("Connection started");
         this.connection.on("PositionObject", (data) => {
-          // console.log(data);
-          this.processUpdate(JSON.parse(data));
+          const current = new Date().toTimeString();
+          const next = new Date(this.lastUpdate + this.frequency).toTimeString();
+          // console.log({ current, next });
+          if (current >= next) {
+            this.processUpdate(JSON.parse(data));
+          }
         })
       })
       .catch(err => console.log("Error while starting connection: " + err));
+
   }
+
+  get planeMarkerIcon() {
+    return {
+      path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+      fillColor: "#f700d4",
+      fillOpacity: 1,
+      strokeWeight: 4,
+      scale: 7,
+      rotation: this.simData.TrueHeading
+    }
+  };
 
   setMap(event) {
     this.map = event.map;
-    this.setMarker();
+    this.marker = new google.maps.Marker({ position: { lat: this.simData.Latitude, lng: this.simData.Longitude }, map: this.map, icon: this.planeMarkerIcon });
     this.centrMapOnPosition();
   }
 
   async requestInitPlugin() {
     const result = await this.http.post<boolean>("/initPlugin", null).toPromise();
-    this.simData = (<SimUpdate>{
-      Latitude: 53.3355,
-      Longitude: -8.9681,
-      Altitude: 1995,
-      TrueHeading: 323,
-      FuelQty: 22.68,
-      GroundTrack: 325,
-      GroundSpeed: 142,
-      ParkingBrake: true,
-      OnGround: false,
-      Airline: "TDV",
-      TailNumber: "G-TDV",
-      FlightNumber: "24",
-      Model: "T",
-      StallWarning: false,
-      OverspeedWarning: false,
-      GPSApproachTimeDeviation: false
-    });
     this.centrMapOnPosition();
   }
 
   processUpdate(data: SimUpdate) {
+    this.lastUpdate = new Date().getTime();
+    const currentPos = { lat: data.Latitude, lng: data.Longitude };
+    data.AtDepartureAirport = this.atDepartureAirport(currentPos);
+    data.AtArrivalAirport = this.atArrivalAirport(currentPos);
+    data.DistanceToDestination = this.distanceToDestination(currentPos);
     this.simData = data;
+    if (this.jobService.activeJob && this.jobService.activeJob.status == "Started") {
+      this.jobService.update(new FlightUpdate(data));
+      this.drawFlightPath();
+      this.drawJobPins();
+    }
+    this.position = [this.simData.Latitude, this.simData.Longitude];
+    this.setMarker();
   }
 
   centrMapOnPosition() {
-    this.map.setCenter({ lat: this.simData.Latitude, lng: this.simData.Longitude });
+    if (this.simData && this.map) {
+      this.map.setCenter({ lat: this.simData.Latitude, lng: this.simData.Longitude });
+    }
   }
 
   setMarker() {
-    this.centrMapOnPosition();
-    if (this.marker != null) {
-      this.marker.setMap(null);
+    if (this.map) {
+      if (this.follow) {
+        this.centrMapOnPosition();
+      }
+      const result = (this.setMarker) ? [this.simData.Latitude, this.simData.Longitude] : [this.jobService.activeJob.departure.latitude, this.jobService.activeJob.departure.longitude];
+      this.i = 0;
+      this.deltaLat = (result[0] - this.position[0]) / this.numDeltas;
+      this.deltaLng = (result[1] - this.position[1]) / this.numDeltas;
+
+      var latlng = new google.maps.LatLng(this.position[0], this.position[1]);
+      this.marker.setPosition(latlng);
+      this.marker.setIcon(this.planeMarkerIcon);
+      if (this.i != this.numDeltas) {
+        this.i++;
+        setTimeout(this.setMarker, this.delay);
+      }
     }
-    const image = {
-      path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
-      fillColor: "#f700d4",
-      fillOpacity: 1,
-      strokeWeight: 2,
-      scale: 7,
-      rotation: this.simData.TrueHeading
-    };
-    this.marker = new google.maps.Marker({ position: { lat: this.simData.Latitude, lng: this.simData.Longitude }, map: this.map, icon: image });
   }
 
-  // setMarker() {
-  //   if (!this.marker) {
-  //     this.initMarker();
-  //   }
-  //   this.marker.setPosition({ lat: this.simData.Latitude, lng: this.simData.Longitude });
-  // }
-
-  debugMap() {
-    // console.log(this.map);
-    const ctr = this.map.getCenter();
-    const newCtr = { lat: ctr.lat() + 0.05, lng: ctr.lng() + 0.05 };
-    this.map.setCenter(newCtr);
+  drawFlightPath() {
+    if (this.jobService.activeJob && this.jobService.activeJob.flightData.length > 0) {
+      const points = this.jobService.activeJob.flightData.map(x => new google.maps.LatLng(x.lat, x.lng));
+      const lineSymbol = {
+        path: 'M 0,-1 0,1',
+        strokeOpacity: 1,
+        scale: 4
+      };
+      var line = new google.maps.Polyline({
+        path: points,
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+        map: this.map
+      });
+    }
   }
 
-  changeMarker() {
-    var deg = 270
-    const img = document.querySelectorAll("img[src='https://gibsonfiles.blob.core.windows.net/stevetest-filestore/airplane_small.png#marker']");
-    img.forEach(x => {
-      console.log(x);
-      x.setAttribute('class', 'plane-marker');
-    });
+  drawJobPins() {
+    if (this.jobService.activeJob) {
+      const depLatLng = { lat: this.jobService.activeJob.departure.latitude, lng: this.jobService.activeJob.departure.longitude }
+      const destLatLng = { lat: this.jobService.activeJob.arrival.latitude, lng: this.jobService.activeJob.arrival.longitude };
+      var depMarker = new google.maps.Marker({
+        position: depLatLng,
+        map: this.map,
+        title: this.jobService.activeJob.departure.icao + ' - ' + this.jobService.activeJob.departure.name,
+        label: this.jobService.activeJob.departure.icao
+      });
+
+      var destMarker = new google.maps.Marker({
+        position: destLatLng,
+        map: this.map,
+        title: this.jobService.activeJob.arrival.icao + ' - ' + this.jobService.activeJob.arrival.name,
+        label: this.jobService.activeJob.arrival.icao
+      });
+
+      var line = new google.maps.Polyline({
+        path: [depLatLng, destLatLng],
+        geodesic: true,
+        strokeColor: '#4eff33',
+        strokeOpacity: .80,
+        strokeWeight: 4,
+        map: this.map
+      });
+
+      // var line = new google.map.PolyLine({
+      //   path: [depLatLng, destLatLng],
+      //   geodesic: true,
+      //   strokeColor: "#4eff33",
+      //   strokeOpacity: 1,
+      //   strokeWeight: 3,
+      //   map: this.map
+      // });
+    }
+  }
+
+  atDepartureAirport(currentPos) {
+    const departurePos = { lat: this.jobService.activeJob.departure.latitude, lng: this.jobService.activeJob.departure.longitude };
+    const distanceFromAirport = this.jobService.measureDistance(currentPos, departurePos);
+    return (distanceFromAirport <= 2000 && this.simData.OnGround);
+  }
+
+  atArrivalAirport(currentPos) {
+    const arrivalPos = { lat: this.jobService.activeJob.arrival.latitude, lng: this.jobService.activeJob.arrival.longitude };
+    const distanceFromAirport = this.jobService.measureDistance(currentPos, arrivalPos);
+    return (distanceFromAirport <= 2000 && this.simData.OnGround);
+  }
+
+  distanceToDestination(currentPos): number {
+    const arrivalPos = { lat: this.jobService.activeJob.arrival.latitude, lng: this.jobService.activeJob.arrival.longitude };
+    return Math.round(this.jobService.measureDistance(currentPos, arrivalPos) / 1000);
   }
 }
-
-
-
-var RotateIcon = function (options) {
-  this.options = options || {};
-  this.rImg = options.img || new Image();
-  this.rImg.src = this.rImg.src || this.options.url || '';
-  this.options.width = this.options.width || this.rImg.width || 52;
-  this.options.height = this.options.height || this.rImg.height || 60;
-  var canvas = document.createElement("canvas");
-  canvas.width = this.options.width;
-  canvas.height = this.options.height;
-  this.context = canvas.getContext("2d");
-  this.canvas = canvas;
-};
-RotateIcon.prototype.makeIcon = function (url) {
-  return new RotateIcon({ url: url });
-};
-RotateIcon.prototype.setRotation = function (options) {
-  var canvas = this.context,
-    angle = options.deg ? options.deg * Math.PI / 180 :
-      options.rad,
-    centerX = this.options.width / 2,
-    centerY = this.options.height / 2;
-
-  canvas.clearRect(0, 0, this.options.width, this.options.height);
-  canvas.save();
-  canvas.translate(centerX, centerY);
-  canvas.rotate(angle);
-  canvas.translate(-centerX, -centerY);
-  canvas.drawImage(this.rImg, 0, 0);
-  canvas.restore();
-  return this;
-};
-RotateIcon.prototype.getUrl = function () {
-  return this.canvas.toDataURL('image/png');
-};

@@ -8,15 +8,24 @@ namespace FlightManager
     {
         public Position currentPosition;
         private readonly SimHub simHub;
+        private readonly bool Initialized = false;
 
         public FlightSimConnector(SimHub simHub) : base("FlightManagerClient")
         {
-            Client.OnRecvException += OnRecvException;
-            Client.OnRecvEvent += OnRecvEvent;
-            Client.OnRecvEventObjectAddremove += OnRecvEventObjectAddremove;
-            Client.OnRecvSimobjectData += OnRecvSimobjectData;
-            Client.OnRecvSimobjectDataBytype += OnRecvSimobjectDataBytype;
-            this.simHub = simHub;
+            if (Initialized == false)
+            {
+                Client.OnRecvException += OnRecvException;
+                Client.OnRecvEvent += OnRecvEvent;
+                Client.OnRecvEventObjectAddremove += OnRecvEventObjectAddremove;
+                Client.OnRecvSimobjectData += OnRecvSimobjectData;
+                Client.OnRecvSimobjectDataBytype += OnRecvSimobjectDataBytype;
+                this.simHub = simHub;
+                Initialized = true;
+            }
+            else
+            {
+                Console.WriteLine("Flight sim connector already initialized");
+            }
         }
 
         protected override void OnRecvOpen(SimConnect sender, SIMCONNECT_RECV_OPEN data)

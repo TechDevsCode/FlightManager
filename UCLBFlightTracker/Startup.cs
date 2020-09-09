@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using FlightManager.Hubs;
+using UCLBFlightTracker.Services;
 
 namespace FlightManager
 {
@@ -29,7 +30,7 @@ namespace FlightManager
             services.AddOptions();
             services.Configure<FlightManagerConfig>(Configuration.GetSection("FlightManagerConfig"));
             services.AddSingleton(Configuration);
-
+            services.AddSingleton<AirportService>();
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder

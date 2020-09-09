@@ -1,0 +1,127 @@
+<div class="page-body">
+
+    <h1>Saved Jobs</h1>
+    <table class="table table-sm table-hover" *ngIf="savedJobs">
+        <thead>
+            <tr>
+                <th>Job#</th>
+                <th>Job Name</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Flight#</th>
+                <th>Tail#</th>
+                <th>Job Staus</th>
+                <th>Flight Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let j of savedJobs">
+                <td>{{j.jobNumber}}</td>
+                <td>{{j.name}}</td>
+                <td>{{j.departure?.icao}} - {{j.departure?.name}}</td>
+                <td>{{j.arrival?.icao}} - {{j.arrival?.name}}</td>
+                <td>{{j.flightNumber}}</td>
+                <td>{{j.tailNumber}}</td>
+                <td>{{j.status}}</td>
+                <td>{{j.flightStatus}}</td>
+                <td>
+                    <button pButton icon="pi pi-play" class="p-button-sm p-button-success"
+                        (click)="startSavedJob(j)"></button>
+                    <button pButton icon="pi pi-download" class="p-button-sm p-button-info"
+                        (click)="downloadJobFile(j)"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-sm p-button-danger"
+                        (click)="deleteJob(j)"></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <br>
+    <br>
+
+    <h1>Create New Job</h1>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Job #</th>
+                <th>Job Name</th>
+                <th>Pilot</th>
+                <th>Flight #</th>
+                <th>Tail #</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="p-inputtext-sm p-input-filled">
+                        <input type="text" [(ngModel)]="job.jobNumber">
+                    </div>
+                </td>
+                <td>
+                    <div class="p-inputtext-sm p-input-filled">
+                        <input type="text" [(ngModel)]="job.name">
+                    </div>
+                </td>
+                <td>
+                    <div class="p-inputtext-sm p-input-filled">
+                        <input type="text" [(ngModel)]="job.pilot">
+                    </div>
+                </td>
+                <td>
+                    <div class="p-inputtext-sm p-input-filled">
+                        <input type="text" [(ngModel)]="job.flightNumber">
+                    </div>
+                </td>
+                <td>
+                    <div class="p-inputtext-sm p-input-filled">
+                        <input type="text" [(ngModel)]="job.tailNumber">
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Navigation</h3>
+    <p-dropdown [options]="airportOptions" [(ngModel)]="job.departure" [virtualScroll]="true"
+        placeholder="Pick departure airport" itemSize="30" [filter]="true" [style]="{'min-width': '400px'}">
+    </p-dropdown>
+    <p-dropdown [options]="airportOptions" [(ngModel)]="job.arrival" [virtualScroll]="true"
+        placeholder="Pick arrival airport" itemSize="30" [filter]="true" [style]="{'min-width': '400px'}">
+    </p-dropdown>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>ICAO</th>
+                <th>Name</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>UTC Offset</th>
+                <th>Elevation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngIf="job.departure">
+                <td>{{job.departure.icao}}</td>
+                <td>{{job.departure.name}}</td>
+                <td>{{job.departure.city}}</td>
+                <td>{{job.departure.country}}</td>
+                <td>{{job.departure.timezone}}</td>
+                <td>{{job.departure.altitude}} feet</td>
+            </tr>
+            <tr *ngIf="job.arrival">
+                <td>{{job.arrival.icao}}</td>
+                <td>{{job.arrival.name}}</td>
+                <td>{{job.arrival.city}}</td>
+                <td>{{job.arrival.country}}</td>
+                <td>{{job.arrival.timezone}}</td>
+                <td>{{job.arrival.altitude}} feet</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button pButton label="Start Job" icon="pi pi-play" (click)="startJob()"
+        [disabled]="!job || !job.departure || !job.arrival"></button>
+
+</div>
