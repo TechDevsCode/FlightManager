@@ -22,6 +22,7 @@ export class FlightMonitorComponent implements OnInit {
   private frequency: number = 1000;
 
   flight: Flight;
+  flightPath: google.maps.LatLng[] = [];
 
   constructor(
     private http: HttpClient,
@@ -32,7 +33,7 @@ export class FlightMonitorComponent implements OnInit {
   ngOnInit(): void {
     this.jobService.activeFlight.subscribe(j => {
       this.flight = j;
-      console.log("Job Update", j);
+      // console.log("Job Update", j);
     });
     this.route.params.subscribe((p: Params) => {
       this.jobService.loadFlight(p['flightNumber']);
@@ -62,16 +63,17 @@ export class FlightMonitorComponent implements OnInit {
     const result = await this.http.post<boolean>("/initPlugin", null).toPromise();
   }
 
-  processUpdate(data) {
+  processUpdate(data: SimUpdate) {
+    this.flightPath = this.flight.flightData.map(x => x.pos);
+    // console.log("Flight path update", this.flightPath);
     this.lastUpdate = new Date().getTime();
-    const currentPos = { lat: data.Latitude, lng: data.Longitude };
-    data.AtDepartureAirport = this.jobService.atDepartureAirport(currentPos, this.simData.onGround);
-    data.AtArrivalAirport = this.jobService.atArrivalAirport(currentPos, this.simData.onGround);
-    data.DistanceToDestination = this.jobService.distanceToDestination(currentPos);
+    data.atDepartureAirport = this.jobService.atDepartureAirport(data.position, this.simData.onGround);
+    data.atArrivalAirport = this.jobService.atArrivalAirport(data.position, this.simData.onGround);
+    data.distanceToDestination = this.jobService.distanceToDestination(data.position);
     this.simData = data;
     if (this.jobService.activeFlight && this.flight.status == "Started") {
+      // console.log("Flight path update", this.flightPath);
       this.jobService.updateFlight(new FlightUpdate(data));
     }
   }
-
 }

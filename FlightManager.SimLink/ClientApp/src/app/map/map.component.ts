@@ -31,7 +31,7 @@ export class MapComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.map = new google.maps.Map(document.getElementById("fm-map"), { zoom: 6, center: this.position });
+    this.map = new google.maps.Map(document.getElementById("fm-map"), { zoom: 16, center: this.position });
     this.marker = new google.maps.Marker({ icon: this.planeMarkerIcon, map: this.map });
     this.depMarker = new google.maps.Marker({ title: "From", map: this.map });
     this.arvMarker = new google.maps.Marker({ title: "To", map: this.map });

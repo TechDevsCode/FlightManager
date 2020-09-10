@@ -2,6 +2,7 @@ using FlightManager.Hubs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Text;
 using System.Windows.Forms;
 
 namespace FlightManager.SimLink
@@ -14,6 +15,7 @@ namespace FlightManager.SimLink
         [STAThread]
         static void Main()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -55,8 +57,8 @@ namespace FlightManager.SimLink
         {
             _webHost = Host.CreateDefaultBuilder()
                 .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>())
-                .UseEnvironment("Development")
-                //.UseEnvironment("Production")
+                //.UseEnvironment("Development")
+                .UseEnvironment("Production")
                 .Build();
             await _webHost.RunAsync();
         }

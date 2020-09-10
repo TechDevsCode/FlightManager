@@ -7,7 +7,7 @@
             </div>
         <div class="left-pane-body">
             <app-map *ngIf="flight" [position]="simData?.position" [heading]="simData?.trueHeading"
-                [departure]="flight.departure.position" [arrival]="flight.arrival.position"></app-map>
+                [departure]="flight.departure.position" [arrival]="flight.arrival.position" [flightPath]="flightPath"></app-map>
         </div>
 
     </div>

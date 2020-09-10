@@ -6,27 +6,27 @@
         <div class="section-header"> <i class="fas fa-plane"></i> Aircraft Monitor</div>
         <div class="section-line">
             <div class="section-line-label"> <i class="fas fa-globe"></i> Latitude : </div>
-            <div class="section-line-value"><strong>{{simUpdate.latitude}}</strong></div>
+            <div class="section-line-value"><strong>{{simUpdate.latitude | number}}</strong></div>
         </div>
         <div class="section-line">
             <div class="section-line-label"> <i class="fas fa-globe"></i> Longitue : </div>
-            <div class="section-line-value"><strong>{{simUpdate.longitude}}</strong></div>
+            <div class="section-line-value"><strong>{{simUpdate.longitude| number}}</strong></div>
         </div>
         <div class="section-line">
             <div class="section-line-label"> <i class="fas fa-arrows-alt-v"></i>Altitude: </div>
-            <div class="section-line-value"><strong>{{simUpdate.altitude}} feet</strong></div>
+            <div class="section-line-value"><strong>{{simUpdate.altitude| number}} feet</strong></div>
         </div>
         <div class="section-line">
             <div class="section-line-label"> <i class="far fa-compass"></i>Heading: </div>
-            <div class="section-line-value"><strong>{{simUpdate.trueHeading}} degrees</strong></div>
+            <div class="section-line-value"><strong>{{simUpdate.trueHeading| number}} degrees</strong></div>
         </div>
         <div class="section-line">
             <div class="section-line-label"> <i class="fas fa-tachometer-alt"></i>Engine RPM: </div>
-            <div class="section-line-value"><strong>{{simUpdate.enginerpm}} rpm</strong></div>
+            <div class="section-line-value"><strong>{{simUpdate.enginerpm| number}} rpm</strong></div>
         </div>
         <div class="section-line">
             <div class="section-line-label"> <i class="fas fa-tachometer-alt"></i>Ground Speed: </div>
-            <div class="section-line-value"><strong>{{simUpdate.groundSpeed}} knots</strong></div>
+            <div class="section-line-value"><strong>{{simUpdate.groundSpeed| number}} knots</strong></div>
         </div>
         <div class="section-line">
             <div class="section-line-label"> <i class="fas fa-stop-circle"></i>Parking Brake: </div>
@@ -40,12 +40,20 @@
                 <p-inputSwitch [(ngModel)]="simUpdate.onGround" disabled></p-inputSwitch>
             </div>
         </div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-plane-departure"></i>At Departure: </div>
+            <div class="section-line-value">
+                <p-inputSwitch [(ngModel)]="simUpdate.atDepartureAirport" disabled></p-inputSwitch>
+            </div>
+        </div>
     </div>
     <div class="section">
         <div class="section-header">
             Commands
         </div>
-        <button pButton label="Start Job" (click)="flightService.startFlight()" class="p-button-sm" [disabled]="!canStart"></button>
+        <button pButton label="Start Job" (click)="flightService.startFlight()" class="p-button-sm"
+            [disabled]="!canStart"></button>
+        <button pButton label="Init Plugin" (click)="requestInitPlugin()" class="p-button-sm"></button>
 
         <p-messages [(value)]="messages"></p-messages>
     </div>

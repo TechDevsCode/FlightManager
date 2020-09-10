@@ -27,8 +27,9 @@ export class FlightService {
     this._activeFlight = flight;
     this.localSave();
   }
-  
+
   updateFlight(update: FlightUpdate) {
+    // console.log("Saving flight update");
     if (this._activeFlight) {
       let refreshFreq: number;
       if (update.grounded && update.parkingBrake) {
@@ -61,10 +62,12 @@ export class FlightService {
   private processFligtData(update: FlightUpdate): FlightUpdate {
     const last = this.lastFlightUpdate;
 
+    // console.log("Process Update", update);
     if (last) {
 
 
       const current = update;
+
 
       if (last.grounded && current.grounded == false) {
         this.takeOff();
@@ -78,7 +81,7 @@ export class FlightService {
         this.startTaxi();
       }
 
-      if (current.parkingBrake == true && current.spd < 2 && current.enginerpm == 0 && this.atDepartureAirport(current.pos, current.grounded)) {
+      if (current.parkingBrake == true && current.spd < 2 && current.enginerpm == 0 && this.atDepartureAirport(update.pos, current.grounded)) {
         this.completeFLight();
       }
 
@@ -167,6 +170,10 @@ export class FlightService {
 
   atDepartureAirport(currentPos, grounded) {
     const distanceFromAirport = this.measureDistance(currentPos, this._activeFlight.departure.position);
+    // console.log("Current pos", currentPos);
+    // console.log("Departure pos", this._activeFlight.departure.position);
+    // console.log("Distance from aitport", distanceFromAirport);
+    // console.log("Grounded ", grounded);
     return (distanceFromAirport <= 2000 && grounded);
   }
 
