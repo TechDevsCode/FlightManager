@@ -1,5 +1,7 @@
 <div class="divider divider-vertical">
 
+
+
     <div class="section">
         <div class="section-header"> <i class="fas fa-plane"></i> Aircraft Monitor</div>
         <div class="section-line">
@@ -38,5 +40,13 @@
                 <p-inputSwitch [(ngModel)]="simUpdate.onGround" disabled></p-inputSwitch>
             </div>
         </div>
+    </div>
+    <div class="section">
+        <div class="section-header">
+            Commands
+        </div>
+        <button pButton label="Start Job" (click)="flightService.startFlight()" class="p-button-sm" [disabled]="!canStart"></button>
+
+        <p-messages [(value)]="messages"></p-messages>
     </div>
 </div>

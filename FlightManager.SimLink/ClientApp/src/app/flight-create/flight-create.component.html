@@ -11,6 +11,7 @@
                 <th>Tail #</th>
                 <th> <i class="fas fa-plane-departure"></i> Departure</th>
                 <th> <i class="fas fa-plane-arrival"></i> Arrival</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -56,22 +57,28 @@
                         </p-dropdown>
                     </div>
                 </td>
+                <td>
+                    <button pButton label="Start Job" icon="pi pi-play" (click)="startJob()"
+                        [disabled]="!flight || !flight.departure || !flight.arrival"></button>
+                </td>
             </tr>
         </tbody>
     </table>
+<br>
+<br>
+<br>
 
-
-    <button pButton label="Start Job" icon="pi pi-play" (click)="startJob()"
-        [disabled]="!flight || !flight.departure || !flight.arrival"></button>
 
     <!-- 
     <app-airport-map [position]="flight.departure?.position">
     </app-airport-map> -->
-    <div class="map-container">
-        <p-gmap [options]="options" [style]="{'width':'50%','height':'400px'}" (onMapReady)="setDepartureMap($event)">
-        </p-gmap>
-        <p-gmap [options]="options" [style]="{'width':'50%','height':'400px'}" (onMapReady)="setArrivalMap($event)">
-        </p-gmap>
-    </div>
+    <!-- <div class="map-container"> -->
+    <p-gmap [options]="options" [style]="{'width':'100%','height':'400px'}" (onMapReady)="setDepartureMap($event)">
+    </p-gmap>
+    <br>
+    <br>
+    <p-gmap [options]="options" [style]="{'width':'100%','height':'400px'}" (onMapReady)="setArrivalMap($event)">
+    </p-gmap>
+    <!-- </div> -->
 
 </div>

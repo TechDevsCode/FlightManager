@@ -55,8 +55,8 @@ namespace FlightManager.SimLink
         {
             _webHost = Host.CreateDefaultBuilder()
                 .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>())
-                //.UseEnvironment("Development")
-                .UseEnvironment("Production")
+                .UseEnvironment("Development")
+                //.UseEnvironment("Production")
                 .Build();
             await _webHost.RunAsync();
         }
