@@ -19,18 +19,14 @@
 		<None Remove="obj\**" />
 		<None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
 	</ItemGroup>
-
-
-
-
+	
 	<ItemGroup>
 		<PackageReference Include="BeatlesBlog.SimConnect" Version="0.1.1" />
 		<PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.8" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
 		<PackageReference Include="GeoCoordinate.NetCore" Version="1.0.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.1" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.8" />
 	</ItemGroup>
-
 
 	<ItemGroup>
 		<None Update="Data\airports.json">

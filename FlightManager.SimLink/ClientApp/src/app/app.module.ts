@@ -6,51 +6,46 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from "@angular/common/http";
 import { AppComponent } from './app.component';
 import { SimConnecterComponent } from './sim-connecter/sim-connecter.component';
-import { ButtonModule } from "primeng/button";
-import { GMapModule } from 'primeng/gmap';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { SliderModule } from 'primeng/slider';
 import { FormsModule } from "@angular/forms";
-import { ManageJobsComponent } from './manage-jobs/manage-jobs.component';
-import { MenubarModule } from 'primeng/menubar';
+import { ManageFlightsComponent } from './manage-flights/manage-flights.component';
 import { RouterModule } from '@angular/router';
-import { DropdownModule } from 'primeng/dropdown';
-import { JobService } from './job.service';
-import { ToggleButtonModule } from 'primeng/togglebutton';
+import { FlightService } from './flight.service';
 import { MapComponent } from './map/map.component';
-import { FileUploadModule } from 'primeng/fileupload';
-import {ToastModule} from 'primeng/toast';
+import { FlightMonitorComponent } from './monitor-flight/monitor-flight.component';
+import { FlightPropertiesComponent } from './flight-properties/flight-properties.component';
 import { MessageService } from 'primeng/api';
+import { AppPrimeNgModule } from './app-prime-ng.module';
+import { AircraftPropertiesComponent } from './aircraft-properties/aircraft-properties.component';
+import { FlightCreateComponent } from './flight-create/flight-create.component';
+import { AirportMapComponent } from './airport-map/airport-map.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SimConnecterComponent,
-    ManageJobsComponent,
-    MapComponent
+    ManageFlightsComponent,
+    FlightMonitorComponent,
+    MapComponent,
+    FlightPropertiesComponent,
+    AircraftPropertiesComponent,
+    FlightCreateComponent,
+    AirportMapComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    ButtonModule,
-    GMapModule,
-    InputNumberModule,
+    AppPrimeNgModule,
     FormsModule,
-    SliderModule,
-    MenubarModule,
-    DropdownModule,
-    FileUploadModule,
-    ToastModule,
-    ToggleButtonModule,
     RouterModule.forRoot([
-      { path: '', component: ManageJobsComponent },
-      { path: 'sim_connect/:job', component: SimConnecterComponent },
-      { path: 'manage_jobs', component: ManageJobsComponent },
+      { path: '', redirectTo: 'flights', pathMatch: "full" },
+      { path: 'flights', component: ManageFlightsComponent },
+      { path: 'flights/create', component: FlightCreateComponent },
+      { path: 'flights/:flightNumber', component: FlightMonitorComponent },
     ])
   ],
   providers: [
-    JobService,
+    FlightService,
     MessageService
   ],
   bootstrap: [AppComponent]

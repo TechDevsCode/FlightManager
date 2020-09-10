@@ -1,0 +1,17 @@
+<div class="monitor-job-page">
+    <div class="left-pane">
+
+
+        <div class="left-pane-header">
+                <app-flight-properties [flight]="flight"></app-flight-properties>
+            </div>
+        <div class="left-pane-body">
+            <app-map *ngIf="flight" [position]="simData?.position" [heading]="simData?.trueHeading"
+                [departure]="flight.departure.position" [arrival]="flight.arrival.position"></app-map>
+        </div>
+
+    </div>
+    <div class="right-pane">
+        <app-aircraft-properties [flight]="flight" [simUpdate]="simData"></app-aircraft-properties>
+    </div>
+</div>

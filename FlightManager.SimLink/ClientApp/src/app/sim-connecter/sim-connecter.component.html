@@ -1,6 +1,6 @@
 <div *ngIf="!job" class="page-body">
-    <h1>No Active Job!</h1>
-    <button pButton label="Goto Jobs" [routerLink]="['/manage_jobs']"></button>
+    <h1>No Active Flight!</h1>
+    <button pButton label="Goto Jobs" [routerLink]="['/flights']"></button>
     <button pButton label="Load Job" (click)="loadJob()"></button>
 </div>
 
@@ -10,7 +10,7 @@
             <table class="table table-sm table-striped" *ngIf="job">
                 <thead>
                     <tr>
-                        <th colspan="3">Job Details</th>
+                        <th colspan="3">Flight Details</th>
                     </tr>
                 </thead>
                 <thead>
@@ -22,9 +22,9 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Job #</td>
+                        <td>Flight Id </td>
                         <td>
-                            {{job.jobNumber}}
+                            {{job.flightId}}
                         </td>
                         <td></td>
                     </tr>

@@ -49,7 +49,6 @@ export class MapComponent implements OnInit, OnChanges {
     this.setFlightPath();
   }
 
-
   ngOnChanges(changes: SimpleChanges): void {
     if (this.map) {
       if (changes.position && changes.position.currentValue != changes.position.previousValue) {

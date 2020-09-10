@@ -13,7 +13,13 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.items = [
       // { label: "Sim Connect", icon: "fas fa-plane-departure", routerLink: ['sim_connect'] },
-      { label: "Jobs", icon: "pi pi-cog", routerLink: ['manage_jobs'] },
+      { label: "UCLB Flight Manager" },
+      {
+        label: "Flights", icon: "fas fa-plane-departure", items: [
+          { label: "Create Flight", icon: "pi pi-plus", routerLink: ['/flights', 'create'] },
+          { label: "Manage Flights", icon: "pi pi-cog", routerLink: ['/flights'] },
+        ]
+      },
     ];
   }
 }

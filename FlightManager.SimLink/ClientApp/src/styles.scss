@@ -1,18 +1,82 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "~primeicons/primeicons.css";
-@import "~primeng/resources/themes/saga-blue/theme.css";
+@import "~primeng/resources/themes/bootstrap4-dark-blue/theme.css";
 @import "~primeng/resources/primeng.min.css";
-@import "./assets/bootstrap-grid.css";
+
+@import "~@fortawesome/fontawesome-free/css/all.css";
+// @import "./assets/bootstrap-grid.css";
+@import "./assets/theme-darkblue.css";
 
 .page-body {
     padding: 1rem;
 }
 
 html {
-    font-size: 12px;
+    font-size: 13px;
+    background-color: var(--surface-b);
+    color: var(--text-color);
+    font-family: var(--font-family);
+}
+
+body {
+    background-color: var(--surface-b);
+    color: var(--text-color);
+    margin: 0;
 }
 
 .p-toast {
     opacity: 1 !important;
+}
+
+.divider {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+
+    &.divider-vertical {
+        flex-direction: column;
+        .section {
+            .section-line {
+                padding: 1rem 0.25rem;
+            }
+        }
+    }
+
+    .section {
+        flex-grow: 1;
+        height: 100%;
+        // border: blue 1px solid;
+        display: flex;
+        flex-direction: column;
+
+        .section-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .section-line {
+            margin-left: 2rem;
+
+            display: flex;
+            padding: 0.25rem;
+
+            .section-line-label {
+                min-width: 150px;
+            }
+            .section-line-value {
+            }
+        }
+    }
+}
+
+.fas {
+    margin-right: 0.75rem;
+}
+.far {
+    margin-right: 0.75rem;
+}
+.fa {
+    margin-right: 0.75rem;
 }

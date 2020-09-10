@@ -1,0 +1,42 @@
+<div class="divider divider-vertical">
+
+    <div class="section">
+        <div class="section-header"> <i class="fas fa-plane"></i> Aircraft Monitor</div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-globe"></i> Latitude : </div>
+            <div class="section-line-value"><strong>{{simUpdate.latitude}}</strong></div>
+        </div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-globe"></i> Longitue : </div>
+            <div class="section-line-value"><strong>{{simUpdate.longitude}}</strong></div>
+        </div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-arrows-alt-v"></i>Altitude: </div>
+            <div class="section-line-value"><strong>{{simUpdate.altitude}} feet</strong></div>
+        </div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="far fa-compass"></i>Heading: </div>
+            <div class="section-line-value"><strong>{{simUpdate.trueHeading}} degrees</strong></div>
+        </div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-tachometer-alt"></i>Engine RPM: </div>
+            <div class="section-line-value"><strong>{{simUpdate.enginerpm}} rpm</strong></div>
+        </div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-tachometer-alt"></i>Ground Speed: </div>
+            <div class="section-line-value"><strong>{{simUpdate.groundSpeed}} knots</strong></div>
+        </div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-stop-circle"></i>Parking Brake: </div>
+            <div class="section-line-value">
+                <p-inputSwitch [(ngModel)]="simUpdate.parkingBrake" disabled></p-inputSwitch>
+            </div>
+        </div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-plane-arrival"></i>On Ground: </div>
+            <div class="section-line-value">
+                <p-inputSwitch [(ngModel)]="simUpdate.onGround" disabled></p-inputSwitch>
+            </div>
+        </div>
+    </div>
+</div>

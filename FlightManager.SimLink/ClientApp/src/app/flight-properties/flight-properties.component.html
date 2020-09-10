@@ -1,0 +1,36 @@
+<div class="divider">
+
+    <div class="section">
+        <div class="section-header"> Flight Plan</div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-plane-departure"></i> Departure: </div>
+            <div class="section-line-value"><strong>{{flight.departure.icao}}</strong> - {{flight.departure.name}}</div>
+        </div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-plane-arrival"></i> Destination: </div>
+            <div class="section-line-value"><strong>{{flight.arrival.icao}}</strong> - {{flight.arrival.name}}</div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-header">Sector</div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-user"></i> Sector Time: </div>
+            <div class="section-line-value"><strong>{{flight.departureTime }}</strong> </div>
+        </div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-user"></i> Flight Time: </div>
+            <div class="section-line-value"><strong>{{flight.takeoffTime}}</strong> </div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="section-header">Status </div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-user"></i> Flight: </div>
+            <div class="section-line-value"><strong>{{flight.status}}</strong> </div>
+        </div>
+        <div class="section-line">
+            <div class="section-line-label"> <i class="fas fa-shield-alt"></i> Aircraft: </div>
+            <div class="section-line-value"><strong>{{flight.flightStatus}}</strong> </div>
+        </div>
+    </div>
+</div>

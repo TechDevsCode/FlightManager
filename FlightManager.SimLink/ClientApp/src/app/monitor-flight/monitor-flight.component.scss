@@ -1,0 +1,26 @@
+.monitor-job-page {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: calc(100vh - 44px);
+
+    .left-pane {
+        flex-grow: 11;
+        display: flex;
+        flex-direction: column;
+
+        .left-pane-header {
+            padding: 1rem;
+            height: 100px;
+        }
+        .left-pane-body {
+            flex-grow: 1;
+        }
+    }
+
+    .right-pane {
+        padding: 1rem;
+        flex-grow: 3;
+        background-color: #0a0f15;
+    }
+}

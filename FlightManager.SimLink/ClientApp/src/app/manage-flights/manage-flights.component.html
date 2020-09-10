@@ -1,0 +1,46 @@
+<div class="page-body">
+
+    <h1>Saved Flights</h1>
+    <table class="table table-sm table-hover" *ngIf="savedFlights">
+        <thead>
+            <tr>
+                <th>Flight Id</th>
+                <th>Description</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Flight#</th>
+                <th>Tail#</th>
+                <th>Job Staus</th>
+                <th>Flight Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let j of savedFlights">
+                <td>{{j.flightId}}</td>
+                <td>{{j.name}}</td>
+                <td>{{j.departure?.icao}} - {{j.departure?.name}}</td>
+                <td>{{j.arrival?.icao}} - {{j.arrival?.name}}</td>
+                <td>{{j.flightNumber}}</td>
+                <td>{{j.tailNumber}}</td>
+                <td>{{j.status}}</td>
+                <td>{{j.flightStatus}}</td>
+                <td>
+                    <button pButton icon="pi pi-play" class="p-button-sm p-button-success"
+                        (click)="startSavedJob(j)"></button>
+                    <button pButton icon="pi pi-download" class="p-button-sm p-button-info"
+                        (click)="downloadJobFile(j)"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-sm p-button-danger"
+                        (click)="deleteJob(j)"></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <br>
+
+    <h1>Import flight</h1>
+    <p-fileUpload name="myfile[]" customUpload="true" (uploadHandler)="uploadFile($event)"></p-fileUpload>
+
+</div>

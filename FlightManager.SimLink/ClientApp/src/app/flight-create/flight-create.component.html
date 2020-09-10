@@ -1,0 +1,77 @@
+<div class="page-body" *ngIf="flight">
+
+    <h1> <i class="fas fa-plane-plus"></i> Create New Flight</h1>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Job #</th>
+                <th>Job Name</th>
+                <th>Pilot</th>
+                <th>Flight #</th>
+                <th>Tail #</th>
+                <th> <i class="fas fa-plane-departure"></i> Departure</th>
+                <th> <i class="fas fa-plane-arrival"></i> Arrival</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="p-inputtext-sm p-input-filled">
+                        <input pInputText type="text" [(ngModel)]="flight.flightId">
+                    </div>
+                </td>
+                <td>
+                    <div class="p-inputtext-sm p-input-filled">
+                        <input pInputText type="text" [(ngModel)]="flight.name">
+                    </div>
+                </td>
+                <td>
+                    <div class="p-inputtext-sm p-input-filled">
+                        <input pInputText type="text" [(ngModel)]="flight.pilot">
+                    </div>
+                </td>
+                <td>
+                    <div class="p-inputtext-sm p-input-filled">
+                        <input pInputText type="text" [(ngModel)]="flight.flightNumber">
+                    </div>
+                </td>
+                <td>
+                    <div class="p-inputtext-sm p-input-filled">
+                        <input pInputText type="text" [(ngModel)]="flight.tailNumber">
+                    </div>
+                </td>
+                <td>
+                    <div class="p-inputtext-sm p-input-filled">
+                        <p-dropdown [options]="airportOptions" [(ngModel)]="flight.departure" [virtualScroll]="true"
+                            placeholder="Pick departure airport" itemSize="30" [filter]="true"
+                            [style]="{'min-width': '250px'}" scrollHeight="500px" (ngModelChange)="updateDeparture()">
+                        </p-dropdown>
+                    </div>
+                </td>
+                <td>
+                    <div class="p-inputtext-sm p-input-filled">
+                        <p-dropdown [options]="airportOptions" [(ngModel)]="flight.arrival" [virtualScroll]="true"
+                            placeholder="Pick arrival airport" itemSize="30" [filter]="true"
+                            [style]="{'min-width': '250px'}" scrollHeight="500px" (ngModelChange)="updateArrival()">
+                        </p-dropdown>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <button pButton label="Start Job" icon="pi pi-play" (click)="startJob()"
+        [disabled]="!flight || !flight.departure || !flight.arrival"></button>
+
+    <!-- 
+    <app-airport-map [position]="flight.departure?.position">
+    </app-airport-map> -->
+    <div class="map-container">
+        <p-gmap [options]="options" [style]="{'width':'50%','height':'400px'}" (onMapReady)="setDepartureMap($event)">
+        </p-gmap>
+        <p-gmap [options]="options" [style]="{'width':'50%','height':'400px'}" (onMapReady)="setArrivalMap($event)">
+        </p-gmap>
+    </div>
+
+</div>

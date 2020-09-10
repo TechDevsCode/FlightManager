@@ -1,20 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import * as signalR from "@aspnet/signalr";
+import { SimUpdate } from '../models/SimUpdate';
+import { Flight } from '../models/Flight';
 import { HttpClient } from '@angular/common/http';
-declare var google: any;
-import { } from 'googlemaps';
 import { FlightService } from '../flight.service';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Flight } from "../models/Flight";
-import { FlightUpdate } from "../models/FlightUpdate";
-import { SimUpdate } from '../models/SimUpdate';
+import * as signalR from '@aspnet/signalr';
+import { FlightUpdate } from '../models/FlightUpdate';
 
 @Component({
-  selector: 'app-sim-connecter',
-  templateUrl: './sim-connecter.component.html',
-  styleUrls: ['./sim-connecter.component.scss']
+  selector: 'app-monitor-flight',
+  templateUrl: './monitor-flight.component.html',
+  styleUrls: ['./monitor-flight.component.scss']
 })
-export class SimConnecterComponent implements OnInit {
+export class FlightMonitorComponent implements OnInit {
+
 
   connection: signalR.HubConnection;
   simData: SimUpdate = <SimUpdate>{};
@@ -22,7 +21,7 @@ export class SimConnecterComponent implements OnInit {
   private lastUpdate: number = new Date().getTime();
   private frequency: number = 1000;
 
-  job: Flight;
+  flight: Flight;
 
   constructor(
     private http: HttpClient,
@@ -32,7 +31,7 @@ export class SimConnecterComponent implements OnInit {
 
   ngOnInit(): void {
     this.jobService.activeFlight.subscribe(j => {
-      this.job = j;
+      this.flight = j;
       console.log("Job Update", j);
     });
     this.route.params.subscribe((p: Params) => {
@@ -70,8 +69,9 @@ export class SimConnecterComponent implements OnInit {
     data.AtArrivalAirport = this.jobService.atArrivalAirport(currentPos, this.simData.onGround);
     data.DistanceToDestination = this.jobService.distanceToDestination(currentPos);
     this.simData = data;
-    if (this.jobService.activeFlight && this.job.status == "Started") {
+    if (this.jobService.activeFlight && this.flight.status == "Started") {
       this.jobService.updateFlight(new FlightUpdate(data));
     }
   }
+
 }
